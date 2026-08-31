@@ -5,9 +5,9 @@
 | Team Member | Student ID | Role |
 |---|---:|---|
 | Methul Demika | 30598 | Backend Connections |
-| M. K. Navodi | 31038 | Task & Settings Developer |
-| N. D. D. Silva | 36533 | Front-End & Integration Developer |
-| S. H. A. H. H. Gunathilake | 30831 | Admin & Member Interface Developer |
+| M. K. Navodi | 31038 | Task & Settings Development |
+| N. D. D. Silva | 36533 | Front-End & Integration Development |
+| S. H. A. H. H. Gunathilake | 30831 | Admin & Member Interface Development |
 | W. M. H. H. Bandara | 36487 | System Testing and Fixing |
 | W. W. N. Aloka | 30940 | Backend Connections |
 

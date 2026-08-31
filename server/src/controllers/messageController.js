@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { isValidId } = require("../utils/ids");
 const Message = require("../models/Message");
 const User = require("../models/User");
 const AppError = require("../utils/AppError");
@@ -20,7 +20,7 @@ async function listMessages(req, res) {
     $or: [{ sender: req.user._id }, { recipient: req.user._id }]
   };
   if (withUser) {
-    if (!mongoose.isValidObjectId(withUser) || !boardMemberIds(req.board).includes(withUser)) {
+    if (!isValidId(withUser) || !boardMemberIds(req.board).includes(withUser)) {
       throw new AppError(422, "Select a member of this project.");
     }
     query.$or = [
@@ -38,7 +38,7 @@ async function listMessages(req, res) {
 
 async function createMessage(req, res) {
   const recipientId = String(req.body.recipientId || "").trim();
-  if (!mongoose.isValidObjectId(recipientId) || !boardMemberIds(req.board).includes(recipientId)) {
+  if (!isValidId(recipientId) || !boardMemberIds(req.board).includes(recipientId)) {
     throw new AppError(422, "Select a member of this project.");
   }
   if (recipientId === req.user._id.toString()) throw new AppError(422, "Choose another member to contact.");

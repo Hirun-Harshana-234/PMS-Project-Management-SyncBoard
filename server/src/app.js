@@ -26,7 +26,7 @@ function createApp() {
   if (allowedOrigins.length) {
     app.use(cors({
       origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        if (!env.isProduction || !origin || allowedOrigins.includes(origin)) return callback(null, true);
         callback(new Error("Origin is not allowed by CORS."));
       },
       credentials: true

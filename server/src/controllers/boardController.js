@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { isValidId } = require("../utils/ids");
 const Board = require("../models/Board");
 const Task = require("../models/Task");
 const Activity = require("../models/Activity");
@@ -65,7 +65,7 @@ async function archiveBoard(req, res) {
 
 async function addMember(req, res) {
   const userId = req.body.userId;
-  if (!mongoose.isValidObjectId(userId)) throw new AppError(422, "Select a valid user.");
+  if (!isValidId(userId)) throw new AppError(422, "Select a valid user.");
   const user = await User.findById(userId);
   if (!user || !user.active) throw new AppError(404, "User not found.");
   if (req.board.members.some((member) => member.user.toString() === userId)) throw new AppError(409, "This user is already a board member.");

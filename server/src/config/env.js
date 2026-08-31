@@ -14,7 +14,6 @@ if (nodeEnv === "production" && (accessSecret.startsWith("development-") || refr
 module.exports = {
   nodeEnv,
   port: Number(process.env.PORT || 8080),
-  mongoUri: process.env.MONGO_URI || "mongodb://127.0.0.1:27017/pms",
   clientUrl: process.env.CLIENT_URL || (nodeEnv === "production" ? "" : "http://localhost:5173"),
   accessSecret,
   refreshSecret,

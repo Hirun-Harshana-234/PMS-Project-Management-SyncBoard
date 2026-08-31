@@ -1,30 +1,8 @@
-const mongoose = require("mongoose");
-
-const commentSchema = new mongoose.Schema({
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  message: { type: String, required: true, trim: true, maxlength: 1000 },
-  createdAt: { type: Date, default: Date.now }
-});
-
-const taskSchema = new mongoose.Schema({
-  board: { type: mongoose.Schema.Types.ObjectId, ref: "Board", required: true, index: true },
-  title: { type: String, required: true, trim: true, maxlength: 160 },
-  description: { type: String, trim: true, maxlength: 3000, default: "" },
-  status: { type: String, enum: ["todo", "doing", "done"], default: "todo", index: true },
-  priority: { type: String, enum: ["low", "medium", "high", "urgent"], default: "medium" },
-  category: { type: String, trim: true, maxlength: 60, default: "General" },
-  progress: { type: Number, min: 0, max: 100, default: 0 },
-  assignee: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  dueDate: { type: Date, default: null },
-  tags: { type: [String], default: [] },
-  position: { type: Number, default: Date.now },
-  revision: { type: Number, default: 0, min: 0 },
-  clientId: { type: String, trim: true, maxlength: 100, default: undefined },
-  comments: { type: [commentSchema], default: [] }
-}, { timestamps: true });
-
-taskSchema.index({ board: 1, status: 1, position: 1 });
-taskSchema.index({ board: 1, createdBy: 1, clientId: 1 }, { unique: true, sparse: true });
-
-module.exports = mongoose.model("Task", taskSchema);
+const { BaseModel } = require("../storage/baseModel");
+class Task extends BaseModel {
+  static collectionName = "tasks";
+  static defaults() { return { description: "", status: "todo", priority: "medium", category: "General", progress: 0, assignee: null, dueDate: null, tags: [], position: Date.now(), revision: 0, comments: [] }; }
+  constructor(values, hydrated) { super(values, hydrated); this.board = String(this.board); this.createdBy = String(this.createdBy); this.assignee = this.assignee ? String(this.assignee) : null; }
+  static async populate(task, path) { const User = require("./User"); if (path === "assignee" && task.assignee) task.assignee = await User.findById(task.assignee); if (path === "createdBy") task.createdBy = await User.findById(task.createdBy); if (path === "comments.author") for (const comment of task.comments) comment.author = await User.findById(comment.author); }
+}
+module.exports = Task;

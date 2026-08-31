@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const { isValidId } = require("../utils/ids");
 const Board = require("../models/Board");
 const AppError = require("../utils/AppError");
 const asyncHandler = require("../utils/asyncHandler");
 
 const loadBoard = asyncHandler(async (req, _res, next) => {
   const boardId = req.params.boardId || req.body.boardId;
-  if (!mongoose.isValidObjectId(boardId)) throw new AppError(404, "Board not found.");
+  if (!isValidId(boardId)) throw new AppError(404, "Board not found.");
   const board = await Board.findById(boardId);
   if (!board || board.archived) throw new AppError(404, "Board not found.");
   const membership = board.members.find((member) => member.user.toString() === req.user._id.toString());

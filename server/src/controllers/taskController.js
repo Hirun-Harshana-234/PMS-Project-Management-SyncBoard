@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { isValidId } = require("../utils/ids");
 const Task = require("../models/Task");
 const User = require("../models/User");
 const AppError = require("../utils/AppError");
@@ -21,15 +21,15 @@ async function populatedTask(id) {
 async function syncMemberProgress(boardId, userId) {
   if (!userId) return;
   const [result] = await Task.aggregate([
-    { $match: { board: new mongoose.Types.ObjectId(boardId), assignee: new mongoose.Types.ObjectId(userId) } },
+    { $match: { board: String(boardId), assignee: String(userId) } },
     { $group: { _id: null, average: { $avg: "$progress" } } }
   ]);
   await User.updateOne({ _id: userId }, { $set: { progress: result ? Math.round(result.average) : 0 } });
 }
 
 function validateAssignee(board, assignee) {
-  if (assignee === null || assignee === "") return null;
-  if (!mongoose.isValidObjectId(assignee) || !board.members.some((member) => member.user.toString() === assignee)) {
+  if (assignee === undefined || assignee === null || assignee === "") return null;
+  if (!isValidId(assignee) || !board.members.some((member) => member.user.toString() === assignee)) {
     throw new AppError(422, "Assignee must be a member of this board.");
   }
   return assignee;

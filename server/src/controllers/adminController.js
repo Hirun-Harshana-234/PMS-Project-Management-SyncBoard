@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const { isValidId } = require("../utils/ids");
 const User = require("../models/User");
 const Board = require("../models/Board");
 const Task = require("../models/Task");
@@ -42,7 +42,7 @@ async function createUser(req, res) {
   const boardId = String(req.body.boardId || "").trim();
   let board = null;
   if (boardId) {
-    if (!mongoose.isValidObjectId(boardId)) throw new AppError(422, "Select a valid project board.");
+    if (!isValidId(boardId)) throw new AppError(422, "Select a valid project board.");
     board = await Board.findOne({ _id: boardId, archived: false });
     if (!board) throw new AppError(404, "Project board not found.");
   }

@@ -1,7 +1,7 @@
 const User = require("./models/User");
 const Board = require("./models/Board");
 const Task = require("./models/Task");
-const { connectDatabase, disconnectDatabase } = require("./config/database");
+const { initStore } = require("./storage/jsonStore");
 
 const teamProfiles = [
   { displayName: "Nethmi Silva", username: "nethmi.ui", email: "nethmi@pms.local", jobTitle: "UI/UX Designer", department: "Design", progress: 82, avatarColor: "#8061ff" },
@@ -87,15 +87,13 @@ async function ensureDemoWorkspace() {
 }
 
 async function seedDemo() {
-  await connectDatabase();
+  await initStore();
   await ensureDemoWorkspace();
-  await disconnectDatabase();
 }
 
 if (require.main === module) {
   seedDemo().then(() => console.log("PMS demo accounts and project data are ready.")).catch(async (error) => {
     console.error(error);
-    await disconnectDatabase();
     process.exit(1);
   });
 }

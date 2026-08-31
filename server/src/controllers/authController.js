@@ -9,7 +9,7 @@ const {
 
 async function issueSession(user, res) {
   const refresh = createRefreshToken(user);
-  user.refreshTokens = (user.refreshTokens || []).filter((item) => item.expiresAt > new Date()).slice(-4);
+  user.refreshTokens = (user.refreshTokens || []).filter((item) => new Date(item.expiresAt) > new Date()).slice(-4);
   user.refreshTokens.push({ tokenHash: refresh.tokenHash, expiresAt: refresh.expiresAt });
   await user.save();
   res.cookie("pms_refresh", refresh.token, refreshCookieOptions());
@@ -52,7 +52,7 @@ async function refresh(req, res) {
   const user = await User.findById(payload.sub).select("+passwordHash +refreshTokens");
   if (!user || !user.active) throw new AppError(401, "This account is unavailable.");
   const currentHash = hashToken(token);
-  const valid = user.refreshTokens.some((item) => item.tokenHash === currentHash && item.expiresAt > new Date());
+  const valid = user.refreshTokens.some((item) => item.tokenHash === currentHash && new Date(item.expiresAt) > new Date());
   if (!valid) throw new AppError(401, "Your session has expired.");
   user.refreshTokens = user.refreshTokens.filter((item) => item.tokenHash !== currentHash);
   const accessToken = await issueSession(user, res);

@@ -1,16 +1,8 @@
-const mongoose = require("mongoose");
-
-const accessRequestSchema = new mongoose.Schema({
-  requester: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
-  type: { type: String, enum: ["access", "role", "support"], default: "access" },
-  subject: { type: String, required: true, trim: true, maxlength: 120 },
-  message: { type: String, required: true, trim: true, maxlength: 1500 },
-  status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending", index: true },
-  response: { type: String, trim: true, maxlength: 1000, default: "" },
-  reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  reviewedAt: { type: Date, default: null }
-}, { timestamps: true });
-
-accessRequestSchema.index({ status: 1, createdAt: -1 });
-
-module.exports = mongoose.model("AccessRequest", accessRequestSchema);
+const { BaseModel } = require("../storage/baseModel");
+class AccessRequest extends BaseModel {
+  static collectionName = "accessRequests";
+  static defaults() { return { type: "access", status: "pending", response: "", reviewedBy: null, reviewedAt: null }; }
+  constructor(values, hydrated) { super(values, hydrated); this.requester = String(this.requester); this.reviewedBy = this.reviewedBy ? String(this.reviewedBy) : null; }
+  static async populate(request, path) { if ((path === "requester" || path === "reviewedBy") && request[path]) request[path] = await require("./User").findById(request[path]); }
+}
+module.exports = AccessRequest;

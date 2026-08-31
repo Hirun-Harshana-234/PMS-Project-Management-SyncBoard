@@ -10,6 +10,12 @@ describe("public API contracts", () => {
     expect(response.body).toMatchObject({ ok: true, service: "pms-api", name: "PMS - Project Management SyncBoard" });
   });
 
+  test("allows development clients served from another local origin", async () => {
+    const response = await request(app).get("/api/health").set("Origin", "http://127.0.0.1:5173");
+    expect(response.status).toBe(200);
+    expect(response.headers["access-control-allow-origin"]).toBe("http://127.0.0.1:5173");
+  });
+
   test("rejects a protected board request before database access", async () => {
     const response = await request(app).get("/api/boards");
     expect(response.status).toBe(401);

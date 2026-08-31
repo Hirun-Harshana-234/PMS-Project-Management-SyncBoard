@@ -1,11 +1,8 @@
 const request = require("supertest");
-const mongoose = require("mongoose");
 const { createApp } = require("../src/app");
-const { connectDatabase, disconnectDatabase } = require("../src/config/database");
+const { initStore, resetStore } = require("../src/storage/jsonStore");
 
 const app = createApp();
-const testMongoUri = process.env.TEST_MONGO_URI;
-const describeWithDatabase = testMongoUri ? describe : describe.skip;
 
 async function registerUser(suffix = "one") {
   const response = await request(app).post("/api/auth/register").send({
@@ -17,15 +14,10 @@ async function registerUser(suffix = "one") {
   return response;
 }
 
-beforeAll(async () => { if (testMongoUri) await connectDatabase(testMongoUri); });
-afterEach(async () => {
-  if (!testMongoUri) return;
-  const collections = mongoose.connection.collections;
-  await Promise.all(Object.values(collections).map((collection) => collection.deleteMany({})));
-});
-afterAll(async () => { if (testMongoUri) await disconnectDatabase(); });
+beforeAll(initStore);
+afterEach(resetStore);
 
-describeWithDatabase("authentication and protected routes", () => {
+describe("authentication and protected routes", () => {
   test("registers a user, creates a starter board, and returns a JWT", async () => {
     const response = await registerUser("registration");
     expect(response.status).toBe(201);
@@ -48,7 +40,7 @@ describeWithDatabase("authentication and protected routes", () => {
   });
 });
 
-describeWithDatabase("task CRUD and conflict protection", () => {
+describe("task CRUD and conflict protection", () => {
   test("creates, moves, and deletes a task through the REST API", async () => {
     const registration = await registerUser("crud");
     const token = registration.body.accessToken;

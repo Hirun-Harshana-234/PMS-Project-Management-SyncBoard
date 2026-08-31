@@ -15,7 +15,10 @@ function publicPresence(boardId, io) {
 function attachSocketServer(httpServer) {
   const allowedOrigins = env.clientUrl.split(",").map((item) => item.trim()).filter(Boolean);
   const io = new Server(httpServer, {
-    ...(allowedOrigins.length ? { cors: { origin: allowedOrigins, credentials: true } } : {}),
+    cors: {
+      origin: env.isProduction ? allowedOrigins : true,
+      credentials: true
+    },
     transports: ["websocket", "polling"]
   });
 

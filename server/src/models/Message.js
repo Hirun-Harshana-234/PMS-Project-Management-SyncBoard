@@ -1,15 +1,8 @@
-const mongoose = require("mongoose");
-
-const messageSchema = new mongoose.Schema({
-  board: { type: mongoose.Schema.Types.ObjectId, ref: "Board", required: true, index: true },
-  sender: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  recipient: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  body: { type: String, required: true, trim: true, maxlength: 2000 },
-  kind: { type: String, enum: ["message", "help"], default: "message" },
-  readAt: { type: Date, default: null }
-}, { timestamps: true });
-
-messageSchema.index({ board: 1, sender: 1, recipient: 1, createdAt: -1 });
-messageSchema.index({ recipient: 1, readAt: 1, createdAt: -1 });
-
-module.exports = mongoose.model("Message", messageSchema);
+const { BaseModel } = require("../storage/baseModel");
+class Message extends BaseModel {
+  static collectionName = "messages";
+  static defaults() { return { kind: "message", readAt: null }; }
+  constructor(values, hydrated) { super(values, hydrated); this.board = String(this.board); this.sender = String(this.sender); this.recipient = String(this.recipient); }
+  static async populate(message, path) { if ((path === "sender" || path === "recipient") && message[path]) message[path] = await require("./User").findById(message[path]); }
+}
+module.exports = Message;

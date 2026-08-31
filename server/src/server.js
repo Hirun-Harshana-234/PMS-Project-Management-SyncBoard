@@ -1,12 +1,12 @@
 const http = require("http");
 const env = require("./config/env");
-const { connectDatabase, disconnectDatabase } = require("./config/database");
+const { initStore } = require("./storage/jsonStore");
 const { createApp } = require("./app");
 const { attachSocketServer } = require("./services/socketServer");
 const { ensureDemoWorkspace } = require("./seed");
 
 async function start() {
-  await connectDatabase();
+  await initStore();
   await ensureDemoWorkspace();
   const app = createApp();
   const server = http.createServer(app);
@@ -16,7 +16,6 @@ async function start() {
   async function shutdown(signal) {
     console.log(`${signal} received. Shutting down safely.`);
     server.close(async () => {
-      await disconnectDatabase();
       process.exit(0);
     });
   }

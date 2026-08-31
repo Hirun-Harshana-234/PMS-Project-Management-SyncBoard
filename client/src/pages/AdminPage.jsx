@@ -1,0 +1,23 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { api } from "../services/api";
+import ActivityList from "../components/ActivityList";
+import Icon from "../components/Icon";
+
+const emptySummary = { users: 0, activeUsers: 0, boards: 0, tasks: 0, completed: 0, ongoing: 0, assigned: 0, pendingRequests: 0, averageProgress: 0, analytics: [] };
+
+function AnalyticsBars({ items }) {
+  const values = items.map((item) => Number(item.value || 0));
+  const highest = Math.max(100, ...values, 1);
+  return <div className="admin-bar-chart" aria-label="Project progress analytics bar graph"><div className="chart-grid-lines"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div><div className="chart-columns">{items.map((item, index) => { const value = Number(item.value || 0); return <div className="chart-column" key={item.key || item.label}><div className="chart-column-value">{value}%</div><div className="chart-column-track"><span style={{ height: `${Math.max(value ? 5 : 0, value / highest * 100)}%`, background: ["linear-gradient(180deg,#29c4cf,#3773ff)", "linear-gradient(180deg,#46c8d1,#4a82ff)", "linear-gradient(180deg,#39bd84,#3d73ff)", "linear-gradient(180deg,#896bff,#5a52f5)"][index % 4] }} /></div><strong>{item.label}</strong></div>; })}</div></div>;
+}
+
+export default function AdminPage() {
+  const [data, setData] = useState({ summary: null, recentActivity: [] });
+  const [error, setError] = useState("");
+  useEffect(() => { api.get("/admin/summary").then((result) => setData(result)).catch((loadError) => setError(loadError.message)); }, []);
+  const summary = data.summary || emptySummary;
+  const completion = summary.tasks ? Math.round(summary.completed / summary.tasks * 100) : 0;
+  const analytics = summary.analytics?.length ? summary.analytics : [{ key: "project", label: "Project average", value: summary.averageProgress || 0 }, { key: "assigned", label: "Assigned", value: 0 }, { key: "ongoing", label: "Ongoing", value: 0 }, { key: "completed", label: "Completed", value: completion }];
+  return <section className="content-section admin-dashboard"><header className="page-heading"><div><span className="eyebrow">System administration</span><h2>Dashboard</h2><p>Manage project delivery, task activity, member access, and team communication from one protected control centre.</p></div><Link className="button primary" to="/admin-add-task.html"><Icon name="plus" size={18} />Assign task</Link></header>{error && <div className="form-alert">{error}</div>}<div className="dashboard-metrics admin-dashboard-metrics"><article><span className="metric-icon purple"><Icon name="tasks" /></span><div><small>Total tasks</small><strong>{summary.tasks}</strong><span>Across all project boards</span></div></article><article><span className="metric-icon blue"><Icon name="board" /></span><div><small>Assigned</small><strong>{summary.assigned}</strong><span>Ready to begin</span></div></article><article><span className="metric-icon orange"><Icon name="activity" /></span><div><small>Ongoing</small><strong>{summary.ongoing}</strong><span>Currently moving</span></div></article><article><span className="metric-icon green"><Icon name="check" /></span><div><small>Completed</small><strong>{summary.completed}</strong><span>{completion}% completion rate</span></div></article></div><div className="admin-overview-grid"><section className="panel admin-analytics-card"><header><div><h3>Live progress analytics</h3><p>Bar graph calculated from current task progress.</p></div><strong>{summary.averageProgress || 0}% average</strong></header><AnalyticsBars items={analytics} /><div className="analytics-summary"><span><b>{summary.users}</b> members</span><span><b>{summary.activeUsers}</b> active accounts</span><span><b>{summary.pendingRequests}</b> pending requests</span></div></section><section className="panel admin-activity-card"><header><div><h3>Recent task activity</h3><p>Latest recorded project changes</p></div><span className="live-dot" /></header><ActivityList activities={data.recentActivity || []} compact /></section></div><section className="panel admin-action-panel"><header><div><h3>Workspace controls</h3><p>Jump directly to the areas that need your attention.</p></div></header><div className="quick-admin-actions"><Link to="/admin-add-task.html"><Icon name="plus" />Assign task</Link><Link to="/admin-members.html"><Icon name="team" />Add member & credentials</Link><Link to="/admin-reports.html"><Icon name="reports" />Reports</Link><Link to="/admin-requests.html"><Icon name="request" />Requests</Link></div></section></section>;
+}

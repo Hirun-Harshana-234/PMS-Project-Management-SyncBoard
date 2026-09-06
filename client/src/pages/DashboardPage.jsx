@@ -1,3 +1,4 @@
+//Dashboard page
 import { useMemo } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useBoards } from "../context/BoardContext";

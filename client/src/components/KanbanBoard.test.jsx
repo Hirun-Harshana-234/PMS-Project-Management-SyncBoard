@@ -19,3 +19,4 @@ test("moves a dragged task to another column", () => {
   fireEvent.drop(container.querySelector(".column-done"), { dataTransfer });
   expect(onMoveTask).toHaveBeenCalledWith(task, "done");
 });
+

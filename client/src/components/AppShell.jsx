@@ -65,3 +65,4 @@ export default function AppShell() {
     <Link className="admin-fab" to="/admin/login" title="Open administrator panel" aria-label="Open administrator panel"><Icon name="admin" /><span>Admin</span></Link>
   </div>;
 }
+

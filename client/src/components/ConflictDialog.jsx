@@ -11,3 +11,4 @@ export default function ConflictDialog({ conflict, onClose, onUseLatest }) {
   </Modal>;
 }
 
+

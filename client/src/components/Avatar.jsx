@@ -7,3 +7,4 @@ export default function Avatar({ user, size = "medium", showStatus = false, onli
     </span>
   );
 }
+

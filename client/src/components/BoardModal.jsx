@@ -25,3 +25,4 @@ export default function BoardModal({ open, onClose, onCreate }) {
     </form>
   </Modal>;
 }
+

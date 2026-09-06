@@ -38,3 +38,4 @@ export default function KanbanBoard({ tasks, onOpenTask, onMoveTask, onAddTask, 
     </div>
   );
 }
+

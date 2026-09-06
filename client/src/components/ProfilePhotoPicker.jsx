@@ -29,6 +29,7 @@ export default function ProfilePhotoPicker({ user, value, onChange, compact = fa
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
+  
   async function selectImage(event) {
     const file = event.target.files?.[0];
     event.target.value = "";

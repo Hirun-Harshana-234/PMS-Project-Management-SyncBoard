@@ -5,6 +5,7 @@ import Icon from "./Icon";
 import { draftKey } from "../services/offlineStore";
 import { categories } from "../utils/tasks";
 
+
 const blank = { title: "", description: "", status: "todo", priority: "medium", category: "General", progress: 0, assignee: "", dueDate: "", tags: "" };
 
 export default function TaskModal({ open, onClose, task, initialStatus, board, onSave, onDelete, onComment, readOnly = false }) {

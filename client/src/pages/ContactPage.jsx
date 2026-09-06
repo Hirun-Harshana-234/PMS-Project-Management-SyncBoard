@@ -1,3 +1,4 @@
+//Contact page
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useBoards } from "../context/BoardContext";

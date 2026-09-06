@@ -1,3 +1,4 @@
+//Activity page
 import { useBoards } from "../context/BoardContext";
 import ActivityList from "../components/ActivityList";
 

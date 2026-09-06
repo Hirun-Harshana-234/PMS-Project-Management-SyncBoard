@@ -10,6 +10,7 @@ export default function Modal({ open, onClose, title, eyebrow, children, width =
     return () => { document.removeEventListener("keydown", onKey); document.body.classList.remove("modal-open"); };
   }, [open, onClose]);
   if (!open) return null;
+  
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className={`modal modal-${width}`} role="dialog" aria-modal="true" aria-labelledby="modal-title">

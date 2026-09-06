@@ -1,3 +1,4 @@
+//Profile page
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Avatar from "../components/Avatar";

@@ -6,6 +6,7 @@ function formatDueDate(value) {
   return new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(new Date(value));
 }
 
+
 export default function TaskCard({ task, onOpen, onDragStart, canEdit = true }) {
   const overdue = task.dueDate && task.status !== "done" && new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0));
   return (

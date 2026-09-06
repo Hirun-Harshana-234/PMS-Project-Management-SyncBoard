@@ -1,3 +1,4 @@
+//Reports page
 import { useMemo } from "react";
 import { useBoards } from "../context/BoardContext";
 import Avatar from "../components/Avatar";

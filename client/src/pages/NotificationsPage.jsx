@@ -1,3 +1,4 @@
+//Notifications page
 import { useEffect, useState } from "react";
 import { useBoards } from "../context/BoardContext";
 import ActivityList from "../components/ActivityList";

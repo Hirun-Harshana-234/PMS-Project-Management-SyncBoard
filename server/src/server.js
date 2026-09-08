@@ -12,6 +12,16 @@ async function start() {
   const app = createApp();
   const server = http.createServer(app);
   attachSocketServer(server);
+
+  server.once("error", async (error) => {
+    if (error.code === "EADDRINUSE") {
+      console.error(`Port ${env.port} is already in use. Stop the existing PMS API or set PORT to an available port in .env.`);
+    } else {
+      console.error("Unable to start HTTP server:", error);
+    }
+    await closeStore();
+    process.exit(1);
+  });
   server.listen(env.port, () => console.log(`PMS is running on port ${env.port}`));
 
   async function shutdown(signal) {

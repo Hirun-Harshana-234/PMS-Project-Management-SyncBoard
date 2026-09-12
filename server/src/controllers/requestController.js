@@ -26,7 +26,7 @@ async function createRequest(req, res) {
     requester: req.user._id,
     type,
     subject: requiredString(req.body.subject, "Subject", 120),
-    message: requiredString(req.body.message, "Message", 1500)
+    message: requiredString(req.body.message, "Message", 1500
   });
   const populated = await AccessRequest.findById(request._id).populate("requester", "displayName username email role jobTitle department progress active avatarColor avatarData lastSeenAt createdAt");
   res.status(201).json({ request: mapRequest(populated) });

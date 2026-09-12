@@ -26,7 +26,7 @@ describe("authentication and protected routes", () => {
     expect(response.body.defaultBoardId).toEqual(expect.any(String));
   });
 
-  test("rejects access to boards without an access token", async () => {
+    test("rejects access to boards without an access token", async () => {
     const response = await request(app).get("/api/boards");
     expect(response.status).toBe(401);
     expect(response.body.message).toMatch(/authentication/i);

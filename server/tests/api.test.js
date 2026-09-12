@@ -32,7 +32,7 @@ describe("authentication and protected routes", () => {
     expect(response.body.message).toMatch(/authentication/i);
   });
 
-  test("logs in with an existing username and password", async () => {
+    test("logs in with an existing username and password", async () => {
     await registerUser("login");
     const response = await request(app).post("/api/auth/login").send({ login: "tester_login", password: "SecurePass123" });
     expect(response.status).toBe(200);

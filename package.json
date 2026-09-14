@@ -35,15 +35,6 @@
       "path": "cz-conventional-changelog"
     }
   },
-  "scripts": {
-    "dev:client": "npm run dev --workspace client",
-    "dev:server": "npm run dev --workspace server",
-    "dev:docker": "docker-compose up --build",
-    "build:client": "npm run build --workspace client",
-    "format:check": "prettier --check \"**/*.{js,jsx,json,css,md,html}\"",
-    "lint:check": "eslint \"client/src/**\" \"server/src/**\" --ext .js,.jsx",
-    "commit": "npx cz"
-  },
   "devDependencies": {
     "concurrently": "^9.2.1",
     "eslint": "^8.50.0",

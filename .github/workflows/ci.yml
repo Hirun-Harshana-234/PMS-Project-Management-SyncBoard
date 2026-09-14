@@ -26,6 +26,15 @@ jobs:
       - name: Install dependencies (prefer lockfile, fall back if missing)
         run: npm ci || npm install
 
+      - name: Diagnostic: show package.json and available npm scripts
+        run: |
+          echo "-- package.json --"
+          cat package.json
+          echo
+          echo "-- npm run (scripts) --"
+          npm run
+          echo
+
       - name: Run linter
         run: npm run lint
 

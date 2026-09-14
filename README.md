@@ -99,6 +99,38 @@ npm install
 npm run dev
 ```
 
+## Developer quick commands
+
+Install dependencies and enable git hooks:
+
+```bash
+npm install
+npm run prepare
+```
+
+Run the client or server individually:
+
+```bash
+npm run dev:client
+npm run dev:server
+```
+
+Run everything with Docker:
+
+```bash
+npm run dev:docker
+```
+
+Lint, format, and commit helpers:
+
+```bash
+npm run lint        # run ESLint
+npm run lint:fix    # auto-fix lintable issues
+npm run format      # format files with Prettier
+npm run format:check
+npm run commit      # interactive Commitizen commit
+```
+
 The React client runs at `http://localhost:5173`; Vite proxies API and WebSocket traffic to the API at `http://localhost:8080`.
 
 ## Test and build

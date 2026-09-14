@@ -1,0 +1,8 @@
+node_modules/
+dist/
+build/
+coverage/
+.parcel-cache/
+public/
+client/dist/
+server/dist/
